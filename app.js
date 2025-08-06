@@ -25,7 +25,7 @@ fetch('data/stations.json')
       marker.bindPopup(`
         <strong>${station.name}</strong><br>
         ${station.address}<br>
-        <b>${station.batteries ? 'Batteries Available' : 'No Batteries Available'}</b>
+        <b>${station.batteries ? 'GAS LP Available' : 'GAS LP Not Available'}</b>
       `);
     });
   });
