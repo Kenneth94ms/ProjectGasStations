@@ -1,36 +1,31 @@
-let map;
+// Initialize the map
+const map = L.map('map').setView([9.7489, -83.7534], 8); // Center of Costa Rica
 
-async function initMap() {
-  const response = await fetch('data/stations.json');
-  const stations = await response.json();
+// Add OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 9.934739, lng: -84.087502 },
-    zoom: 8,
-  });
+// Load station data
+fetch('data/stations.json')
+  .then(response => response.json())
+  .then(stations => {
+    stations.forEach(station => {
+      const markerIcon = L.icon({
+        iconUrl: station.batteries
+          ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+          : 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
 
-  stations.forEach(station => {
-    const marker = new google.maps.Marker({
-      position: { lat: station.lat, lng: station.lng },
-      map,
-      icon: station.batteries
-        ? "https://maps.google.com/mapfiles/ms/icons/green-dot.png"
-        : "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
-      title: station.name
-    });
+      const marker = L.marker([station.lat, station.lng], { icon: markerIcon }).addTo(map);
 
-    const infoWindow = new google.maps.InfoWindow({
-      content: `
-        <div>
-          <h3>${station.name}</h3>
-          <p>${station.address}</p>
-          <p><strong>${station.batteries ? "Batteries Available" : "No Batteries"}</strong></p>
-        </div>
-      `
-    });
-
-    marker.addListener("click", () => {
-      infoWindow.open(map, marker);
+      marker.bindPopup(`
+        <strong>${station.name}</strong><br>
+        ${station.address}<br>
+        <b>${station.batteries ? 'Batteries Available' : 'No Batteries Available'}</b>
+      `);
     });
   });
-}
