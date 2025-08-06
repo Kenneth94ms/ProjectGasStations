@@ -1,12 +1,13 @@
 const map = L.map('map').setView([9.7489, -83.7534], 8);
 
-// Tile layer
+// Add OpenStreetMap tiles
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// Use MarkerClusterGroup
-const markerCluster = L.markerClusterGroup();
+// Create a layer group to hold all markers
+const markersLayer = new L.LayerGroup();
+map.addLayer(markersLayer);
 
 // Load station data
 fetch('./data/stations.json')
@@ -24,31 +25,28 @@ fetch('./data/stations.json')
 
       const marker = L.marker([station.lat, station.lng], {
         icon: markerIcon,
-        title: station.name
+        title: station.name // Required for search plugin
       }).bindPopup(`
         <strong>${station.name}</strong><br>
         ${station.address}<br>
         <b>${station.batteries ? 'Gas LP Available' : 'No Gas LP Available'}</b>
       `);
 
-      markerCluster.addLayer(marker);
+      markersLayer.addLayer(marker);
     });
 
-    // Add cluster group to map
-    map.addLayer(markerCluster);
-
-    // Add Search Control (if you have it)
+    // Add Search Control
     const searchControl = new L.Control.Search({
-      layer: markerCluster,
+      layer: markersLayer,
       propertyName: 'title',
       marker: false,
       moveToLocation: function (latlng, title, map) {
-        map.setView(latlng, 14);
+        map.setView(latlng, 14); // Zoom to the marker
       }
     });
 
     searchControl.on('search:locationfound', function (e) {
-      e.layer.openPopup();
+      e.layer.openPopup(); // Open popup on match
     });
 
     map.addControl(searchControl);
