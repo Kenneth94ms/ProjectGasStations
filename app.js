@@ -1,13 +1,15 @@
-// Initialize the map
-const map = L.map('map').setView([9.7489, -83.7534], 8); // Center of Costa Rica
+const map = L.map('map').setView([9.7489, -83.7534], 8);
 
-// Add OpenStreetMap tiles
+// Tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
+// Use MarkerClusterGroup
+const markerCluster = L.markerClusterGroup();
+
 // Load station data
-fetch('data/stations.json')
+fetch('./data/stations.json')
   .then(response => response.json())
   .then(stations => {
     stations.forEach(station => {
@@ -20,12 +22,34 @@ fetch('data/stations.json')
         popupAnchor: [0, -32]
       });
 
-      const marker = L.marker([station.lat, station.lng], { icon: markerIcon }).addTo(map);
-
-      marker.bindPopup(`
+      const marker = L.marker([station.lat, station.lng], {
+        icon: markerIcon,
+        title: station.name
+      }).bindPopup(`
         <strong>${station.name}</strong><br>
         ${station.address}<br>
-        <b>${station.batteries ? 'GAS LP Available' : 'GAS LP Not Available'}</b>
+        <b>${station.batteries ? 'Gas LP Available' : 'No Gas LP Available'}</b>
       `);
+
+      markerCluster.addLayer(marker);
     });
+
+    // Add cluster group to map
+    map.addLayer(markerCluster);
+
+    // Add Search Control (if you have it)
+    const searchControl = new L.Control.Search({
+      layer: markerCluster,
+      propertyName: 'title',
+      marker: false,
+      moveToLocation: function (latlng, title, map) {
+        map.setView(latlng, 14);
+      }
+    });
+
+    searchControl.on('search:locationfound', function (e) {
+      e.layer.openPopup();
+    });
+
+    map.addControl(searchControl);
   });
