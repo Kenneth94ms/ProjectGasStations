@@ -1,53 +1,56 @@
-const map = L.map('map').setView([9.7489, -83.7534], 8);
+// ---------------------------------------------------------------------------
+// Basemap & layers
+// ---------------------------------------------------------------------------
+const map = L.map('map', { scrollWheelZoom: true })
+             .setView([9.7489, -83.7534], 8);
 
-// Add OpenStreetMap tiles
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
+  attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
-// Create a layer group to hold all markers
-const markersLayer = new L.LayerGroup();
+const markersLayer = L.markerClusterGroup();   // marker clusters + search layer
 map.addLayer(markersLayer);
 
-// Load station data
+// ---------------------------------------------------------------------------
+// Load stations & build markers
+// ---------------------------------------------------------------------------
 fetch('./data/stations.json')
-  .then(response => response.json())
+  .then(r => r.json())
   .then(stations => {
-    stations.forEach(station => {
-      const markerIcon = L.icon({
-        iconUrl: station.batteries
+    stations.forEach(st => {
+      const icon = L.icon({
+        iconUrl : st.batteries
           ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
           : 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32]
+        iconSize    : [32, 32],
+        iconAnchor  : [16, 32],
+        popupAnchor : [0,  -32]
       });
 
-      const marker = L.marker([station.lat, station.lng], {
-        icon: markerIcon,
-        title: station.name // Required for search plugin
-      }).bindPopup(`
-        <strong>${station.name}</strong><br>
-        ${station.address}<br>
-        <b>${station.batteries ? 'Gas LP Available' : 'No Gas LP Available'}</b>
-      `);
-
-      markersLayer.addLayer(marker);
+      L.marker([st.lat, st.lng], { icon, title: st.name })   // title → searchable
+        .bindPopup(
+          `<strong>${st.name}</strong><br>
+           ${st.address}<br>
+           <b>${st.batteries ? 'Gas LP Available' : 'No Gas LP Available'}</b>`
+        )
+        .addTo(markersLayer);
     });
 
-    // Add Search Control
-    const searchControl = new L.Control.Search({
-      layer: markersLayer,
-      propertyName: 'title',
-      marker: false,
-      moveToLocation: function (latlng, title, map) {
-        map.setView(latlng, 14); // Zoom to the marker
+    // ---------------------------------------------------------------------
+    // Search control
+    // ---------------------------------------------------------------------
+    const search = new L.Control.Search({
+      layer        : markersLayer,
+      propertyName : 'title',     // matches the marker option above
+      marker       : false,       // keep the original marker
+      position     : 'topleft',
+      textPlaceholder : 'Buscar estación…',
+      moveToLocation(latlng, title, map) {
+        map.flyTo(latlng, 14);    // smooth zoom-in
       }
     });
 
-    searchControl.on('search:locationfound', function (e) {
-      e.layer.openPopup(); // Open popup on match
-    });
-
-    map.addControl(searchControl);
-  });
+    search.on('search:locationfound', e => e.layer.openPopup());
+    map.addControl(search);
+  })
+  .catch(err => console.error('Error loading stations:', err));

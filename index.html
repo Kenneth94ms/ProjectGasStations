@@ -3,22 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <title>LP Gas Stations Map</title>
+
+  <!-- Leaflet core + plug-in styles -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-search@2.9.8/dist/leaflet-search.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-search@2.9.8/dist/leaflet-search.min.css" />
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <h1>Costa Rica - GAS LP Stations</h1>
+  <h1>Costa Rica – GAS LP Stations</h1>
   <div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="app.js"></script>
-  <script src="https://unpkg.com/leaflet-control-search@2.9.8/dist/leaflet-search.min.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <!-- Script order matters: Leaflet → clustering → search → YOUR code -->
+ <!-- 1. Leaflet core -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- 2. Any other Leaflet plug-ins your map depends on -->
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<!-- 3. THE SEARCH PLUG-IN (must come *before* your code) -->
+<script src="https://unpkg.com/leaflet-control-search@2.9.8/dist/leaflet-search.min.js"></script>
+
+<!-- 4. Finally your own code -->
+<script src="app.js"></script>
 </body>
+
 <footer>
-    <p>Project by Kenneth Mora Salazar / 2025</p>
+  <p>Project by Kenneth Mora Salazar / 2025</p>
 </footer>
 </html>
