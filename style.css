@@ -23,3 +23,15 @@ h1{
   max-width: 300px;
   font-size: 14px;
 }
+
+/* style.css  — override the default button */
+.leaflet-control-search .search-button {
+  width: 26px;                 /* keep the same size as default */
+  height: 26px;
+  background:
+    url('images/searchIcon.png')   /* your local copy */
+    no-repeat 4px 4px #fff !important;  /* !important beats CDN rule */
+  background-size: 16px 16px;   /* fit nicely inside 26×26 button */
+  border: 1px solid #ccc;       /* optional: match Leaflet UI */
+  border-radius: 4px;
+}
