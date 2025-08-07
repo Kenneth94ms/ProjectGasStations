@@ -35,3 +35,9 @@ h1{
   border: 1px solid #ccc;       /* optional: match Leaflet UI */
   border-radius: 4px;
 }
+
+#add-panel { margin: 1rem; }
+#add-form  { display: grid; gap: .5rem; max-width: 320px; }
+#add-form label { display: flex; flex-direction: column; font-size: .9rem; }
+#add-form .inline { flex-direction: row; align-items: center; gap: .5rem; }
+#add-form button { cursor: pointer; }

@@ -16,6 +16,30 @@
   <h1>Costa Rica – GAS LP Stations</h1>
   <div id="map"></div>
 
+   <!-- Add-/Edit panel -->
+<details id="add-panel">
+  <summary><strong>➕ Add or ✏️ Edit a station</strong></summary>
+
+  <form id="add-form">
+    <!--  Hidden field holds array index when editing  -->
+    <input type="hidden" name="idx">
+
+    <label>Name       <input name="name"    required></label>
+    <label>Address    <input name="address" required></label>
+    <label>Latitude   <input name="lat"  type="number" step="any" required></label>
+    <label>Longitude  <input name="lng"  type="number" step="any" required></label>
+
+    <label class="inline">
+      <input type="checkbox" name="batteries">
+      Gas LP Available
+    </label>
+
+    <button type="submit" id="save-btn">Add to map</button>
+    <button type="button" id="cancel-edit" style="display:none">Cancel edit</button>
+    <button type="button" id="download-json">Download JSON</button>
+  </form>
+</details>
+
   <!-- Script order matters: Leaflet → clustering → search → YOUR code -->
  <!-- 1. Leaflet core -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
