@@ -1,60 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>LP Gas Stations Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <!-- Leaflet core + plug-in styles -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/4.0.0/leaflet-search.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/4.0.0/leaflet-search.min.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <h1>Costa Rica – GAS LP Stations</h1>
-  <div id="map"></div>
+  <header class="page-header">
+    <h1>Costa Rica – GAS LP Stations</h1>
+  </header>
 
-   <!-- Add-/Edit panel -->
-<details id="add-panel">
-  <summary><strong>➕ Add or ✏️ Edit a station</strong></summary>
+  <main class="layout">
+    <div id="map" role="application" aria-label="Map of LP Gas Stations"></div>
 
-  <form id="add-form">
-    <!--  Hidden field holds array index when editing  -->
-    <input type="hidden" name="idx">
+    <!-- Add-/Edit panel -->
+    <details id="add-panel">
+      <summary><strong>➕ Add or ✏️ Edit a station</strong></summary>
 
-    <label>Name       <input name="name"    required></label>
-    <label>Address    <input name="address" required></label>
-    <label>Latitude   <input name="lat"  type="number" step="any" required></label>
-    <label>Longitude  <input name="lng"  type="number" step="any" required></label>
+      <form id="add-form" autocomplete="off">
+        <!-- Hidden field holds array index when editing -->
+        <input type="hidden" name="idx" />
 
-    <label class="inline">
-      <input type="checkbox" name="batteries">
-      Gas LP Available
-    </label>
+        <label>
+          Name
+          <input name="name" required inputmode="text" />
+        </label>
 
-    <button type="submit" id="save-btn">Add to map</button>
-    <button type="button" id="cancel-edit" style="display:none">Cancel edit</button>
-    <button type="button" id="download-json">Download JSON</button>
-  </form>
-</details>
+        <label>
+          Address
+          <input name="address" required inputmode="text" />
+        </label>
+
+        <label>
+          Latitude
+          <input name="lat" type="number" step="any" inputmode="decimal" required enterkeyhint="done" />
+        </label>
+
+        <label>
+          Longitude
+          <input name="lng" type="number" step="any" inputmode="decimal" required enterkeyhint="done" />
+        </label>
+
+        <label class="inline">
+          <input type="checkbox" name="batteries" />
+          Gas LP Available
+        </label>
+
+        <div class="button-row">
+          <button type="submit" id="save-btn">Add to map</button>
+          <button type="button" id="cancel-edit" class="secondary" style="display:none">Cancel edit</button>
+          <button type="button" id="download-json" class="accent">Download JSON</button>
+        </div>
+      </form>
+    </details>
+  </main>
+
+  <footer class="page-footer">
+    <p>Project by Kenneth Mora Salazar ©2025</p>
+  </footer>
 
   <!-- Script order matters: Leaflet → clustering → search → YOUR code -->
- <!-- 1. Leaflet core -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- 2. Any other Leaflet plug-ins your map depends on -->
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
-<!-- 3. THE SEARCH PLUG-IN (must come *before* your code) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/4.0.0/leaflet-search.min.js"></script>
-
-<!-- 4. Finally your own code -->
-<script src="app.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/4.0.0/leaflet-search.min.js"></script>
+  <script src="app.js"></script>
 </body>
-
-<footer>
-  <p>Project by Kenneth Mora Salazar / 2025</p>
-</footer>
 </html>
